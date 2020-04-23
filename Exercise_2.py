@@ -1,7 +1,8 @@
 import re
 import networkx as nx
-from networkx.algorithms import community
 import matplotlib.pyplot as plt
+from networkx.algorithms import community
+from numpy import random
 
 def is_integer(string):
     try: 
@@ -30,5 +31,12 @@ with open("active_follower_real.sql") as myfile:
                     break
 
 comp = community.label_propagation.label_propagation_communities(G)
+print("Lengths of communities found using the label propagation community detection:")
+for c in comp:
+    print(len(c))
+
+print()
+print("Lengths of communities found using the asynchronous fluid communities algorithm:")
+comp = community.asyn_fluid.asyn_fluidc(G, 5, 30, random.seed(3432))
 for c in comp:
     print(len(c))
