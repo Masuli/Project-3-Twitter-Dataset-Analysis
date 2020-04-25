@@ -29,7 +29,6 @@ with open("active_follower_real.sql") as myfile:
                     exit_this = True
                     break
 
-
 #2-3Clique 
 nd = nx.convert_node_labels_to_integers(G,first_label=2)
 c = list(community.k_clique_communities(nd, 2))
