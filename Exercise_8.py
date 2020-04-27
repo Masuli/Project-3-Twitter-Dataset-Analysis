@@ -32,9 +32,9 @@ print("{} tweets are sent every second.".format(round((float(count) / diff), 4))
 '''
 Now that we have the average time between events (1 tweet / 0.3496s), we can calculate λ for the following equation:
 
-						  (e^-λ) * λ^k
+			  (e^-λ) * λ^k
 P(k events in interval) = -------------
-								k!
+			        k!
 
 This is the poisson distribution probability of k events in an interval. We can choose a time period/interval and some amount of tweets
 and then calculate the probability of that happening.
@@ -44,9 +44,9 @@ Example: Probability of people tweeting 25 times in 10 seconds
 
 λ = 1 / (diff / float(count)) * 10 seconds = 28.6
 
-							  (e^-28.6) * 28.6^25
+			      (e^-28.6) * 28.6^25
 P(25 tweets in 10 seconds) = --------------------- * 100 = 6.27%
-									   25!
+				       25!
 '''
 
 k = 25
