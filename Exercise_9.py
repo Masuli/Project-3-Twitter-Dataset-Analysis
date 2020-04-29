@@ -5,6 +5,7 @@ import datetime
 
 dayGraph = nx.Graph()
 weekGraph = nx.Graph()
+dayTweetGraph = nx.Graph()
 
 epochDay = 86400 * 1000
 epochWeek = epochDay * 7
@@ -25,8 +26,8 @@ with open('link_status_search_with_ordering_real.csv') as csvfile:
         if epochValue < minEpoch:
             minEpoch = epochValue
              
-print(maxEpoch)
-print(minEpoch)
+print("maxEpoch: {}".format(maxEpoch))
+print("minEpoch: {}".format(minEpoch))
 
 epochDiff = maxEpoch - minEpoch
 
@@ -44,17 +45,24 @@ with open('link_status_search_with_ordering_real.csv') as csvfile:
                 epoch = int(row['create_at_long'])
                 dayEvolution = int((epoch - minEpoch) / epochDay)
                 weekEvolution = int((epoch - minEpoch) / epochWeek)
-                dayGraph.add_edge(dayEvolution, row['user_id'])
-                weekGraph.add_edge(weekEvolution, row['user_id'])
-        
+                dayGraph.add_edge(dayEvolution, row['id'])
+                weekGraph.add_edge(weekEvolution, row['id'])
+            else:
+                epoch = int(row['create_at_long'])
+                dayEvolution = int((epoch - minEpoch) / epochDay)
+                dayTweetGraph.add_edge(dayEvolution, row['id'])
         except ValueError:
             continue
 
 for i in range(0, numOfDays + 1):
     print("Day: {}, Retweet amount: {}".format(i, len(dayGraph.edges(i))))
 
+print("")
+
 for i in range(0, numofWeeks + 1):
     print("Week: {}, Retweet amount: {}".format(i, len(weekGraph.edges(i))))
 
-#nx.draw(G, with_labels = False, font_weight = "bold")
-#plt.savefig("graph.png")
+print("")
+
+for i in range(0, numOfDays + 1):
+    print("Day: {}, Tweet amount: {}, Retweet amount: {}, Ratio: {} retweets / tweet.".format(i, len(dayTweetGraph.edges(i)), len(dayGraph.edges(i)), float(len(dayGraph.edges(i))) / len(dayTweetGraph.edges(i))))
