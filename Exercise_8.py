@@ -22,8 +22,8 @@ with open('link_status_search_with_ordering_real.csv') as csvfile:
         if epochValue < minEpoch:
             minEpoch = epochValue
             
-#print(maxEpoch)
-#print(minEpoch)
+#print("maxEpoch: {}".format(maxEpoch))
+#print("minEpoch: {}".format(minEpoch))
 
 diff = float((maxEpoch - minEpoch)) / 1000
 print("1 tweet is sent every {} seconds.".format(round((diff / float(count)), 4)))
