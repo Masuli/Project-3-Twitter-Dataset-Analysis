@@ -37,21 +37,27 @@ mostFollowed = max(users.iteritems(),key=lambda x: int(operator.itemgetter(1)(x)
 mostFollowedUID = int(mostFollowed[0])
 
 print(mostFollowed)# we find britney spears. (Most followed in the follower sql dump.)
-
 followers = dict()
-
+status = False
+index = 0
 with open("active_follower_real.sql") as myfile:
     for line in myfile:
+        if status:
+            break
         result = re.findall(r'\(.*?\)', line)
         for value in result:
             stripped = value.strip('()')
             values = stripped.split(',')
             if len(values) == 2 and is_integer(values[0]) and is_integer(values[1]) and int(values[1]) == mostFollowedUID:
                 followers[values[0]] = []
+                index += 1
+                if index == 10:
+                    status = True
+                    break
 
 followerGraph = nx.Graph()
-print("britney follows: {}".format(len(followers)))
-
+print(len(followers))
+total = 0
 with open("active_follower_real.sql") as myfile:
     for line in myfile:
         result = re.findall(r'\(.*?\)', line)
@@ -61,8 +67,8 @@ with open("active_follower_real.sql") as myfile:
             if len(values) == 2 and is_integer(values[0]) and is_integer(values[1]) and followers.has_key(values[1]):
                 followerGraph.add_edge(values[0], values[1])
 
-print("nodes: {} edges: {}".format(len(followerGraph.nodes()), len(followerGraph.edges())))
 
+print("nodes: {} edges: {}".format(len(followerGraph.nodes()), len(followerGraph.edges())))
 print_average_and_variance(nx.degree_centrality(followerGraph), "degree centrality")
 print_average_and_variance(nx.betweenness_centrality(followerGraph), "betweenness centrality")
 print_average_and_variance(nx.closeness_centrality(followerGraph), "closeness centrality")
@@ -88,6 +94,6 @@ print("shortest path: average: {}, variance: {}".format(avgShortestPath, spVaria
 Gcc = sorted(nx.connected_components(followerGraph), key=len, reverse=True)
 print("Giant component size: {}".format(len(Gcc[0])))
 
-#print("drawing graph")
-#nx.draw(G, with_labels = False, font_weight = "bold")
-#plt.savefig("graph.png")
+print("drawing graph")
+nx.draw(followerGraph, with_labels = False, node_size = 2)
+plt.savefig("graph.png")
